@@ -1,0 +1,5 @@
+{
+  "name": "Sapa Praha Interactive Map",
+  "description": "An interactive map application for Sapa Market in Prague, featuring categorized locations, popover details, and a visual style inspired by tourist maps.",
+  "requestFramePermissions": []
+}

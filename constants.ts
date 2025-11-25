@@ -1,0 +1,237 @@
+import { LocationCategory, MapLocation, CategoryConfig, LocationStatus, Language } from './types';
+
+// Map Background Image URL
+export const DEFAULT_MAP_IMAGE_URL = "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1920&q=80";
+
+// --- GEOLOCATION CONFIGURATION ---
+// These coordinates correspond to the Real World bounding box of Sapa Market Praha.
+// Since the map is an illustration, these need to be calibrated to match the image corners.
+// WARNING: These are approximate values. To make the "Blue Dot" accurate, you need to adjust these
+// to match exactly where the top-left and bottom-right corners of your image are in the real world.
+export const SAPA_BOUNDS = {
+  topLeft: { lat: 50.0065, lng: 14.4750 },    // Top Left corner of the image in real world
+  bottomRight: { lat: 49.9950, lng: 14.4900 } // Bottom Right corner of the image in real world
+};
+
+// --- TRANSLATIONS ---
+export const TRANSLATIONS = {
+  [Language.CS]: {
+    map: "Mapa",
+    list: "Seznam",
+    search_placeholder: "Hledat místo...",
+    admin_mode: "Režim Admin",
+    guest_mode: "Režim Host",
+    add_location: "Přidat místo",
+    change_bg: "Změnit pozadí",
+    filter_all: "Vše",
+    my_location: "Moje poloha",
+    edit: "Upravit",
+    delete: "Smazat",
+    approve: "Schválit",
+    view: "Zobrazit",
+    pending: "Čeká na schválení",
+    form_add_title: "Přidat nové místo",
+    form_edit_title: "Upravit místo",
+    form_name: "Název",
+    form_category: "Kategorie",
+    form_phone: "Telefon",
+    form_desc: "Popis",
+    form_image: "Obrázek",
+    form_upload: "Nahrát fotku",
+    form_move: "Přesunout",
+    form_update: "Aktualizovat",
+    form_create: "Vytvořit",
+    form_submit: "Odeslat návrh",
+    form_coords: "Souřadnice",
+    confirm_delete: "Opravdu chcete smazat toto místo?",
+    locating: "Zjišťování polohy...",
+    location_error: "Nelze zjistit polohu.",
+    location_found: "Poloha nalezena.",
+    move_instruction: "Klikněte na mapu pro novou pozici.",
+    no_results: "Žádné výsledky",
+    empty_list: "Seznam je prázdný",
+  },
+  [Language.DE]: {
+    map: "Karte",
+    list: "Liste",
+    search_placeholder: "Ort suchen...",
+    admin_mode: "Admin-Modus",
+    guest_mode: "Gast-Modus",
+    add_location: "Ort hinzufügen",
+    change_bg: "Hintergrund ändern",
+    filter_all: "Alle",
+    my_location: "Mein Standort",
+    edit: "Bearbeiten",
+    delete: "Löschen",
+    approve: "Genehmigen",
+    view: "Ansehen",
+    pending: "Ausstehend",
+    form_add_title: "Neuen Ort hinzufügen",
+    form_edit_title: "Ort bearbeiten",
+    form_name: "Name",
+    form_category: "Kategorie",
+    form_phone: "Telefon",
+    form_desc: "Beschreibung",
+    form_image: "Bild",
+    form_upload: "Foto hochladen",
+    form_move: "Verschieben",
+    form_update: "Aktualisieren",
+    form_create: "Erstellen",
+    form_submit: "Vorschlag senden",
+    form_coords: "Koordinaten",
+    confirm_delete: "Möchten Sie diesen Ort wirklich löschen?",
+    locating: "Standort wird ermittelt...",
+    location_error: "Standort konnte nicht ermittelt werden.",
+    location_found: "Standort gefunden.",
+    move_instruction: "Klicken Sie auf die Karte für neue Position.",
+    no_results: "Keine Ergebnisse",
+    empty_list: "Liste ist leer",
+  },
+  [Language.VI]: {
+    map: "Bản đồ",
+    list: "Danh sách",
+    search_placeholder: "Tìm địa điểm...",
+    admin_mode: "Chế độ Admin",
+    guest_mode: "Chế độ Khách",
+    add_location: "Thêm địa điểm",
+    change_bg: "Đổi ảnh nền",
+    filter_all: "Tất cả",
+    my_location: "Vị trí của tôi",
+    edit: "Sửa",
+    delete: "Xóa",
+    approve: "Duyệt",
+    view: "Xem",
+    pending: "CHỜ DUYỆT",
+    form_add_title: "Thêm địa điểm mới",
+    form_edit_title: "Sửa thông tin",
+    form_name: "Tên địa điểm",
+    form_category: "Danh mục",
+    form_phone: "Số điện thoại",
+    form_desc: "Mô tả",
+    form_image: "Hình ảnh",
+    form_upload: "Tải ảnh lên",
+    form_move: "Di chuyển vị trí",
+    form_update: "Cập nhật",
+    form_create: "Tạo địa điểm",
+    form_submit: "Gửi đề xuất",
+    form_coords: "Tọa độ",
+    confirm_delete: "Bạn có chắc chắn muốn xóa địa điểm này không?",
+    locating: "Đang định vị...",
+    location_error: "Không thể lấy vị trí.",
+    location_found: "Đã tìm thấy vị trí.",
+    move_instruction: "Đang chọn vị trí mới... Hãy click vào bản đồ!",
+    no_results: "Không tìm thấy kết quả",
+    empty_list: "Chưa có địa điểm nào",
+  }
+};
+
+// Configuration for categories with localized labels
+export const CATEGORIES: CategoryConfig[] = [
+  { 
+    id: LocationCategory.FOOD, 
+    label: { [Language.VI]: 'Ẩm thực', [Language.CS]: 'Jídlo', [Language.DE]: 'Essen' }, 
+    color: 'bg-brand-red', 
+    iconName: 'Utensils' 
+  },
+  { 
+    id: LocationCategory.SHOPPING, 
+    label: { [Language.VI]: 'Mua sắm', [Language.CS]: 'Nákupy', [Language.DE]: 'Einkaufen' }, 
+    color: 'bg-brand-yellow', 
+    iconName: 'ShoppingBag' 
+  },
+  { 
+    id: LocationCategory.SERVICE, 
+    label: { [Language.VI]: 'Dịch vụ', [Language.CS]: 'Služby', [Language.DE]: 'Dienstleist.' }, 
+    color: 'bg-brand-blue', 
+    iconName: 'Info' 
+  },
+  { 
+    id: LocationCategory.WC, 
+    label: { [Language.VI]: 'Vệ sinh', [Language.CS]: 'WC', [Language.DE]: 'WC' }, 
+    color: 'bg-brand-purple', 
+    iconName: 'Bath' 
+  },
+  { 
+    id: LocationCategory.HOTEL, 
+    label: { [Language.VI]: 'Khách sạn', [Language.CS]: 'Hotel', [Language.DE]: 'Hotel' }, 
+    color: 'bg-indigo-500', 
+    iconName: 'Bed' 
+  }, 
+];
+
+// Mock data
+export const INITIAL_LOCATIONS: MapLocation[] = [
+  {
+    id: '1',
+    title: 'Phở Tùng',
+    description: 'Phở bò gia truyền Nam Định.',
+    category: LocationCategory.FOOD,
+    x: 25,
+    y: 35,
+    image: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=400&q=80',
+    rating: 4.8,
+    openHours: '06:00 - 20:00',
+    phoneNumber: '0123 456 789',
+    status: LocationStatus.APPROVED,
+  },
+  {
+    id: '2',
+    title: 'Bún Chả Hà Nội',
+    description: 'Bún chả kẹp que tre nướng than hoa.',
+    category: LocationCategory.FOOD,
+    x: 45,
+    y: 42,
+    image: 'https://images.unsplash.com/photo-1585325701165-351af916e581?auto=format&fit=crop&w=400&q=80',
+    rating: 4.5,
+    openHours: '09:00 - 21:00',
+    phoneNumber: '0987 654 321',
+    status: LocationStatus.APPROVED,
+  },
+  {
+    id: '3',
+    title: 'Siêu thị Tamda',
+    description: 'Siêu thị đồ khô và gia vị Việt Nam.',
+    category: LocationCategory.SHOPPING,
+    x: 65,
+    y: 25,
+    image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=400&q=80',
+    rating: 4.2,
+    openHours: '08:00 - 20:00',
+    phoneNumber: '0234 567 890',
+    status: LocationStatus.APPROVED,
+  },
+  {
+    id: '4',
+    title: 'Tiệm Vàng Bạc',
+    description: 'Chuyên đổi tiền và trang sức.',
+    category: LocationCategory.SERVICE,
+    x: 55,
+    y: 55,
+    image: 'https://images.unsplash.com/photo-1601121141461-9d660d541dd4?auto=format&fit=crop&w=400&q=80',
+    rating: 4.9,
+    openHours: '09:00 - 18:00',
+    phoneNumber: '0345 678 901',
+    status: LocationStatus.APPROVED,
+  },
+  {
+    id: '5',
+    title: 'WC Khu A',
+    description: 'Nhà vệ sinh công cộng.',
+    category: LocationCategory.WC,
+    x: 30,
+    y: 60,
+    image: 'https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&w=400&q=80',
+    status: LocationStatus.APPROVED,
+  },
+  {
+    id: '7',
+    title: 'Khách sạn Sen',
+    description: 'Nghỉ dưỡng tiện nghi ngay trong chợ.',
+    category: LocationCategory.HOTEL,
+    x: 20,
+    y: 20,
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80',
+    phoneNumber: '0555 666 777',
+    status: LocationStatus.APPROVED,
+  },
+];
