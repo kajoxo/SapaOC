@@ -50,6 +50,7 @@ export const TRANSLATIONS = {
     move_instruction: "Klikněte na mapu pro novou pozici.",
     no_results: "Žádné výsledky",
     empty_list: "Seznam je prázdný",
+    rotate_device: "Pro lepší zážitek otočte zařízení na šířku",
   },
   [Language.DE]: {
     map: "Karte",
@@ -86,6 +87,7 @@ export const TRANSLATIONS = {
     move_instruction: "Klicken Sie auf die Karte für neue Position.",
     no_results: "Keine Ergebnisse",
     empty_list: "Liste ist leer",
+    rotate_device: "Bitte drehen Sie Ihr Gerät für eine bessere Ansicht",
   },
   [Language.VI]: {
     map: "Bản đồ",
@@ -122,6 +124,7 @@ export const TRANSLATIONS = {
     move_instruction: "Đang chọn vị trí mới... Hãy click vào bản đồ!",
     no_results: "Không tìm thấy kết quả",
     empty_list: "Chưa có địa điểm nào",
+    rotate_device: "Vui lòng xoay ngang điện thoại để xem bản đồ tốt nhất",
   }
 };
 
@@ -151,12 +154,6 @@ export const CATEGORIES: CategoryConfig[] = [
     color: 'bg-brand-purple', 
     iconName: 'Bath' 
   },
-  { 
-    id: LocationCategory.HOTEL, 
-    label: { [Language.VI]: 'Khách sạn', [Language.CS]: 'Hotel', [Language.DE]: 'Hotel' }, 
-    color: 'bg-indigo-500', 
-    iconName: 'Bed' 
-  }, 
 ];
 
 // Mock data
@@ -221,17 +218,6 @@ export const INITIAL_LOCATIONS: MapLocation[] = [
     x: 30,
     y: 60,
     image: 'https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&w=400&q=80',
-    status: LocationStatus.APPROVED,
-  },
-  {
-    id: '7',
-    title: 'Khách sạn Sen',
-    description: 'Nghỉ dưỡng tiện nghi ngay trong chợ.',
-    category: LocationCategory.HOTEL,
-    x: 20,
-    y: 20,
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80',
-    phoneNumber: '0555 666 777',
     status: LocationStatus.APPROVED,
   },
 ];

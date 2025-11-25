@@ -4,7 +4,6 @@ export enum LocationCategory {
   SERVICE = 'SERVICE',
   WC = 'WC',
   ENTRANCE = 'ENTRANCE',
-  HOTEL = 'HOTEL',
 }
 
 export enum LocationStatus {

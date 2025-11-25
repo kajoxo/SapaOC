@@ -6,6 +6,7 @@ import ListView from './components/ListView';
 import BottomNav from './components/BottomNav';
 import Header from './components/Header';
 import LocationFormModal from './components/LocationModal';
+import { Icon } from './components/Icon';
 
 function App() {
   const [activeCategory, setActiveCategory] = useState<LocationCategory | null>(null);
@@ -27,6 +28,9 @@ function App() {
   // User Location State
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+
+  // Device Orientation State
+  const [showLandscapePrompt, setShowLandscapePrompt] = useState(false);
 
   // Load locations from local storage or use initial with Error Boundary logic
   const [locations, setLocations] = useState<MapLocation[]>(() => {
@@ -73,6 +77,26 @@ function App() {
       console.warn("Storage full or unavailable");
     }
   }, [locations]);
+
+  // Orientation Check
+  useEffect(() => {
+    const checkOrientation = () => {
+      // Check if mobile (roughly) and in portrait mode
+      const isMobile = window.innerWidth <= 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      
+      if (isMobile && isPortrait && viewMode === 'MAP') {
+        setShowLandscapePrompt(true);
+      } else {
+        setShowLandscapePrompt(false);
+      }
+    };
+
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    return () => window.removeEventListener('resize', checkOrientation);
+  }, [viewMode]);
+
 
   // Handle Map Image Upload
   const handleMapImageUpload = (file: File) => {
@@ -256,6 +280,27 @@ function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-hidden">
+        {/* Landscape Prompt Overlay */}
+        {showLandscapePrompt && (
+          <div className="absolute inset-0 z-[70] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 text-center animate-fade-in pointer-events-none">
+             <div className="animate-bounce mb-4">
+                 <Icon name="Smartphone" size={64} className="text-gray-300" />
+                 <Icon name="RotateCw" size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-brand-green animate-spin" />
+             </div>
+             <h2 className="text-xl font-bold mb-2">{t('rotate_device')}</h2>
+             <p className="text-sm text-gray-300 max-w-xs">SAPA Praha Map looks best in landscape mode.</p>
+             <button 
+                onClick={(e) => { 
+                   e.stopPropagation(); // prevent map click
+                   setShowLandscapePrompt(false); 
+                }}
+                className="mt-6 px-4 py-2 bg-white/20 rounded-full text-xs font-bold hover:bg-white/30 pointer-events-auto"
+             >
+                I understand / Bỏ qua
+             </button>
+          </div>
+        )}
+
         {/* Helper Banner for Moving Mode */}
         {movingLocationId && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] bg-blue-600 text-white px-6 py-3 rounded-full shadow-xl animate-bounce font-bold border-2 border-white">

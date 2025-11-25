@@ -13,14 +13,15 @@ import {
   Phone,
   Search,
   ChevronUp,
-  Bed,
   List,
   Plus,
   Map,
   Check,
   Eye,
   Globe,
-  Target
+  Target,
+  Smartphone,
+  RotateCw
 } from 'lucide-react';
 
 interface IconProps {
@@ -44,14 +45,15 @@ export const Icon: React.FC<IconProps> = ({ name, size = 24, className = '' }) =
     Phone,
     Search,
     ChevronUp,
-    Bed,
     List,
     Plus,
     Map,
     Check,
     Eye,
     Globe,
-    Target
+    Target,
+    Smartphone,
+    RotateCw
   };
 
   const IconComponent = icons[name] || MapPin;

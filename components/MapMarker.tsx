@@ -22,7 +22,6 @@ const MapMarker: React.FC<MapMarkerProps> = ({ location, categoryConfig, onClick
     if (location.category === LocationCategory.SHOPPING) return 'ShoppingBag';
     if (location.category === LocationCategory.WC) return 'Bath';
     if (location.category === LocationCategory.SERVICE) return 'Info';
-    if (location.category === LocationCategory.HOTEL) return 'Bed';
     return 'MapPin';
   };
 
