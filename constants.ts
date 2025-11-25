@@ -1,7 +1,7 @@
 import { LocationCategory, MapLocation, CategoryConfig, LocationStatus, Language } from './types';
 
 // Map Background Image URL
-export const DEFAULT_MAP_IMAGE_URL = "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1920&q=80";
+export const DEFAULT_MAP_IMAGE_URL = "images/sapa_map.png";
 
 // --- GEOLOCATION CONFIGURATION ---
 // These coordinates correspond to the Real World bounding box of Sapa Market Praha.

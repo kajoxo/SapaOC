@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CategoryConfig, LocationCategory, MapLocation, Language } from '../types';
 import { Icon } from './Icon';
+import { api } from '../services/api';
 
 interface LocationFormModalProps {
   categories: CategoryConfig[];
@@ -35,6 +36,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
     image: '',
     openHours: ''
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,13 +62,20 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result as string });
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      const file = e.target.files[0];
+      setIsUploading(true);
+      
+      try {
+        // Gọi API upload (sẽ tự fallback về Base64 nếu server lỗi)
+        const imageUrl = await api.uploadImage(file);
+        setFormData(prev => ({ ...prev, image: imageUrl }));
+      } catch (err) {
+        alert("Lỗi tải ảnh");
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -162,10 +171,11 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
                   <button 
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700 font-medium transition-colors flex items-center"
+                    disabled={isUploading}
+                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700 font-medium transition-colors flex items-center disabled:opacity-50"
                   >
-                    <Icon name="Plus" size={16} className="mr-2" />
-                    {t('form_upload')}
+                    <Icon name={isUploading ? "RotateCw" : "Plus"} size={16} className={`mr-2 ${isUploading ? 'animate-spin' : ''}`} />
+                    {isUploading ? 'Đang tải lên...' : t('form_upload')}
                   </button>
                   <span className="text-xs text-gray-400 italic">
                     {formData.image ? '✓ OK' : ''}
@@ -206,7 +216,8 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({
                 )}
                 <button 
                     type="submit"
-                    className="flex-1 bg-brand-green hover:bg-[#7ab332] text-white font-bold py-3 rounded-xl shadow-lg transition-transform hover:scale-[1.02] active:scale-95"
+                    disabled={isUploading}
+                    className="flex-1 bg-brand-green hover:bg-[#7ab332] text-white font-bold py-3 rounded-xl shadow-lg transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:scale-100"
                 >
                     {isEditMode ? t('form_update') : (isAdmin ? t('form_create') : t('form_submit'))}
                 </button>

@@ -38,7 +38,6 @@ const Header: React.FC<HeaderProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Close search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -91,7 +90,6 @@ const Header: React.FC<HeaderProps> = ({
         {/* Search & View Controls */}
         <div className="flex-1 flex items-center space-x-2 mr-2">
             
-            {/* View Toggles */}
             <div className="flex items-center bg-gray-100 p-1 rounded-xl shrink-0">
                 <button 
                     onClick={() => setViewMode('MAP')}
@@ -109,7 +107,6 @@ const Header: React.FC<HeaderProps> = ({
                 </button>
             </div>
 
-            {/* Search Bar */}
             <div className="relative flex-1 max-w-xs" ref={searchRef}>
                 <div className="flex items-center bg-gray-100 rounded-xl px-3 py-1.5 border border-transparent focus-within:border-brand-blue focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                     <Icon name="Search" size={14} className="text-gray-400 mr-2" />
@@ -131,7 +128,6 @@ const Header: React.FC<HeaderProps> = ({
                     )}
                 </div>
 
-                {/* Search Dropdown */}
                 {showSearchResults && searchQuery && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 max-h-60 overflow-y-auto z-[60]">
                         {filteredLocations.length > 0 ? (
@@ -160,9 +156,7 @@ const Header: React.FC<HeaderProps> = ({
             </div>
         </div>
 
-        {/* Right Actions */}
         <div className="flex items-center space-x-2 shrink-0">
-          {/* Admin Image Upload - Hidden Input */}
           <input 
              type="file" 
              ref={fileInputRef} 
@@ -171,7 +165,6 @@ const Header: React.FC<HeaderProps> = ({
              onChange={handleFileChange}
           />
 
-          {/* Language Switcher */}
           <div className="flex items-center bg-gray-100 rounded-full p-1">
               {[Language.CS, Language.VI, Language.DE].map(lang => (
                   <button
@@ -195,7 +188,6 @@ const Header: React.FC<HeaderProps> = ({
              </button>
           )}
 
-          {/* Secure Admin Toggle */}
           {canSwitchAdmin && (
             <button 
                 onClick={() => setIsAdmin(!isAdmin)}
@@ -222,7 +214,6 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="absolute top-full left-4 right-4 mt-2 bg-white rounded-2xl shadow-xl p-2 flex flex-col space-y-1 pointer-events-auto animate-fade-in lg:hidden origin-top z-50">
            <button 

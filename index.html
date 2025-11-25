@@ -67,6 +67,27 @@
       .map-container:active {
         cursor: grabbing;
       }
+
+      /* FORCE LANDSCAPE ON PORTRAIT MOBILE */
+      @media screen and (orientation: portrait) and (max-width: 1024px) {
+        body {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+        }
+        #root {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            /* Rotate 90 degrees */
+            transform: translate(-50%, -50%) rotate(90deg);
+            /* Swap dimensions: Width becomes Height, Height becomes Width */
+            width: 100vh;
+            height: 100vw;
+            overflow: hidden;
+        }
+      }
     </style>
   <script type="importmap">
 {
